@@ -1,6 +1,6 @@
 /**
  * @fileoverview Allows the user to restore their wallet using a mnemonic seed phrase
- * node 02_newAccount.js "Your Seed Phrase Here" 0 (e.g. this returns EVM account at index 0)
+ * Run CMD: node 02_newAccount.js "Your Seed Phrase Here" 0 (e.g. this returns EVM account at index 0)
  */
 
 const { mnemonicToEntropy } = require("ethereum-cryptography/bip39");
