@@ -1,7 +1,6 @@
 /**
- * @fileoverview Implements a function that allows a user to generate an EVM compatible wallet.
- * about its dependencies.
- * @package
+ * @fileoverview Allows users to generate an EVM compatible wallet.
+ * Run CMD: node 01_newAccount.js
  */
 
 const {
