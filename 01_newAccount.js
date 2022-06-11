@@ -14,6 +14,9 @@ const { getPublicKey } = require("ethereum-cryptography/secp256k1");
 const { keccak256 } = require("ethereum-cryptography/keccak");
 const { bytesToHex } = require("ethereum-cryptography/utils");
 
+/**
+ * Generates a 24 word mnemoic phrase and returns both the mnemoic list of words and entropy array.
+ */
 function _generateMnemonic() {
   const strength = 256;
   const mnemonic = generateMnemonic(wordlist, strength);
@@ -22,25 +25,41 @@ function _generateMnemonic() {
   return { mnemonic, entropy };
 }
 
+/**
+ * Returns the Hierarchical Deterministic (HD) root key, which can be used to generate the entire tree of key pairs.
+ */
 function _getHdRootKey(_mnemonic) {
   return HDKey.fromMasterSeed(_mnemonic);
 }
 
+/**
+ * Leverages the HD root key to return a private key at the specified index from it's entire tree of key pairs.
+ */
 function _generatePrivateKey(_hdRootKey, _accountIndex) {
   return _hdRootKey.deriveChild(_accountIndex).privateKey;
 }
 
+/**
+ * Uses ECSDA to derive a Public Key from a specified Private Key.
+ */
 function _getPublicKey(_privateKey) {
   return getPublicKey(_privateKey);
 }
 
+/**
+ * Calculates the Ethereum account address from the specified public key by applying the Keccak-256 hashing algorithm
+ * to the public key and returning the last 20 bytes of the result.
+ */
 function _getEthAddress(_publicKey) {
   return keccak256(_publicKey).slice(-20);
 }
 
+/**
+ * Call this function to generate a new wallet mnemonic and get the first account from it.
+ */
 async function main() {
   const { mnemonic, entropy } = _generateMnemonic();
-  console.log(`WARNING! Never disclose your Seed Phrase:\n ${mnemonic}`);
+  console.log(`WARNING! Never disclose your Seed Phrase:\n ${mnemonic}\n`);
 
   const hdRootKey = _getHdRootKey(entropy);
   const accountOneIndex = 0;
@@ -48,9 +67,13 @@ async function main() {
   const accountOnePublicKey = _getPublicKey(accountOnePrivateKey);
   const accountOneAddress = _getEthAddress(accountOnePublicKey);
 
-  console.log(`Account One Private Key: 0x${bytesToHex(accountOnePrivateKey)}`);
-  console.log(`Account One Public Key: 0x${bytesToHex(accountOnePublicKey)}`);
-  console.log(`Account One Wallet address: 0x${bytesToHex(accountOneAddress)}`);
+  console.log(
+    `Account One Private Key: \t0x${bytesToHex(accountOnePrivateKey)}`
+  );
+  console.log(`Account One Public Key: \t0x${bytesToHex(accountOnePublicKey)}`);
+  console.log(
+    `Account One Wallet address: \t0x${bytesToHex(accountOneAddress)}`
+  );
 }
 
 main()
