@@ -12,6 +12,7 @@ const { HDKey } = require("ethereum-cryptography/hdkey");
 const { getPublicKey } = require("ethereum-cryptography/secp256k1");
 const { keccak256 } = require("ethereum-cryptography/keccak");
 const { bytesToHex } = require("ethereum-cryptography/utils");
+const { writeFileSync } = require("fs");
 
 /**
  * Generates a 24 word mnemoic phrase and returns both the mnemoic list of words and entropy array.
@@ -53,6 +54,17 @@ function _getEthAddress(_publicKey) {
   return keccak256(_publicKey).slice(-20);
 }
 
+function _store(_privateKey, _publicKey, _address) {
+  const accountOne = {
+    privateKey: _privateKey,
+    publicKey: _publicKey,
+    address: _address,
+  };
+
+  const accountOneData = JSON.stringify(accountOne);
+  writeFileSync("newAccount_0.json", accountOneData);
+}
+
 /**
  * Call this function to generate a new wallet mnemonic and get the first account from it.
  */
@@ -65,6 +77,8 @@ async function main() {
   const accountOnePrivateKey = _generatePrivateKey(hdRootKey, accountOneIndex);
   const accountOnePublicKey = _getPublicKey(accountOnePrivateKey);
   const accountOneAddress = _getEthAddress(accountOnePublicKey);
+
+  _store(accountOnePrivateKey, accountOnePublicKey, accountOneAddress);
 
   console.log(
     `Account One Private Key: \t0x${bytesToHex(accountOnePrivateKey)}`

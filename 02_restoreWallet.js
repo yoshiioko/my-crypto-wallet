@@ -9,6 +9,18 @@ const { HDKey } = require("ethereum-cryptography/hdkey");
 const { getPublicKey } = require("ethereum-cryptography/secp256k1");
 const { keccak256 } = require("ethereum-cryptography/keccak");
 const { bytesToHex } = require("ethereum-cryptography/utils");
+const { writeFileSync } = require("fs");
+
+function _store(_privateKey, _publicKey, _address) {
+  const accountOne = {
+    privateKey: _privateKey,
+    publicKey: _publicKey,
+    address: _address,
+  };
+
+  const accountOneData = JSON.stringify(accountOne);
+  writeFileSync("restoreWallet_0.json", accountOneData);
+}
 
 /**
  * Uses the specified mnemonic seed pharse to restore the account and return the EVM account at the
@@ -20,6 +32,8 @@ async function main(_mnemonic, _accountIndex) {
   const privateKey = hdRootKey.deriveChild(parseInt(_accountIndex)).privateKey;
   const publicKey = getPublicKey(privateKey);
   const address = keccak256(publicKey).slice(-20);
+
+  _store(privateKey, publicKey, address);
 
   console.log(
     `Account ${_accountIndex} Wallet Address: 0x${bytesToHex(address)}`
