@@ -19,7 +19,7 @@ Note: Wallet Addresses from Steps 1 & 2 should match exactly!
 
 node 03_send.js "Receiver Address" "Amount of Ether"
 
-Note: This command will fail on first execution because your local account will have no fund. Step 3 will 
+Note: This command will fail on first execution because your local account will have no funds. Step 3 will 
 output the account that needs to be funded with Devnet Ether!
 
 
