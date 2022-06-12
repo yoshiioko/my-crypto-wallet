@@ -4,13 +4,24 @@ A simple Node.js app that implements an EVM wallet using the libraries: ethereum
 
 # How to use it?
 
+## Step 1:
 Run:
+
 node 01_newAccount.js
 
-Run: 
-node 02_restoreWallet.js "Generated Seed Phrase From Step 1 Here" 0 (e.g. this will return account at index 0)
+## Step 2:
+ 
+node 02_restoreWallet.js "Seed Phrase From Step 1 Goes Here" 
 
-If executed correctly the Wallet addresses from Step 1 and Step 2 will be exact matches!
+Note: Wallet Addresses from Steps 1 & 2 should match exactly!
+
+## Step 3:
+
+node 03_send.js "Receiver Address" "Amount of Ether"
+
+Note: This command will fail on first execution because your local account will have no fund. Step 3 will 
+output the account that needs to be funded with Devnet Ether!
+
 
 # Tutorial Link
 
