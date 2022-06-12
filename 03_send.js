@@ -10,7 +10,7 @@ async function main(_receiverAddress, _ethAmount) {
   const network = "rinkeby";
   const provider = getDefaultProvider(network);
 
-  const accountRawData = readFileSync("account 1.json", "utf8");
+  const accountRawData = readFileSync("0_newAccount.json", "utf8");
   const accountData = JSON.parse(accountRawData);
 
   const privateKey = Object.values(accountData.privateKey);
