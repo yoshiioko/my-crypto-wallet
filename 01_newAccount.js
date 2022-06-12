@@ -9,7 +9,7 @@ const {
 } = require("ethereum-cryptography/bip39");
 const { wordlist } = require("ethereum-cryptography/bip39/wordlists/english");
 const { HDKey } = require("ethereum-cryptography/hdkey");
-const { getPublicKey } = require("ethereum-cryptography/secp256k1");
+const { getPublicKey, ecdsaSign } = require("ethereum-cryptography/secp256k1");
 const { keccak256 } = require("ethereum-cryptography/keccak");
 const { bytesToHex } = require("ethereum-cryptography/utils");
 const { writeFileSync } = require("fs");
@@ -18,7 +18,7 @@ const { writeFileSync } = require("fs");
  * Generates a 24 word mnemoic phrase and returns both the mnemoic list of words and entropy array.
  */
 function _generateMnemonic() {
-  const strength = 256;
+  const strength = 256; // 256 bits, 24 words; default is 128 bits, 12 words
   const mnemonic = generateMnemonic(wordlist, strength);
   const entropy = mnemonicToEntropy(mnemonic, wordlist);
 
@@ -62,7 +62,7 @@ function _store(_privateKey, _publicKey, _address) {
   };
 
   const accountOneData = JSON.stringify(accountOne);
-  writeFileSync("newAccount_0.json", accountOneData);
+  writeFileSync("0_newAccount.json", accountOneData);
 }
 
 /**
@@ -70,23 +70,19 @@ function _store(_privateKey, _publicKey, _address) {
  */
 async function main() {
   const { mnemonic, entropy } = _generateMnemonic();
-  console.log(`WARNING! Never disclose your Seed Phrase:\n ${mnemonic}\n`);
+  console.log(`WARNING! Never disclose your Seed Phrase:\n ${mnemonic}`);
 
   const hdRootKey = _getHdRootKey(entropy);
+
   const accountOneIndex = 0;
   const accountOnePrivateKey = _generatePrivateKey(hdRootKey, accountOneIndex);
+
   const accountOnePublicKey = _getPublicKey(accountOnePrivateKey);
+
   const accountOneAddress = _getEthAddress(accountOnePublicKey);
+  console.log(`Account One Wallet Address: 0x${bytesToHex(accountOneAddress)}`);
 
   _store(accountOnePrivateKey, accountOnePublicKey, accountOneAddress);
-
-  console.log(
-    `Account One Private Key: \t0x${bytesToHex(accountOnePrivateKey)}`
-  );
-  console.log(`Account One Public Key: \t0x${bytesToHex(accountOnePublicKey)}`);
-  console.log(
-    `Account One Wallet address: \t0x${bytesToHex(accountOneAddress)}`
-  );
 }
 
 main()
