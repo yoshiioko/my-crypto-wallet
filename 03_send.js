@@ -16,6 +16,9 @@ async function main(_receiverAddress, _ethAmount) {
   const privateKey = Object.values(accountData.privateKey);
 
   const signer = new Wallet(privateKey, provider);
+  console.log(
+    `If tx fails due to insufficient funds, fund this account with Ether: ${signer.address}\n`
+  );
 
   const transaction = await signer.sendTransaction({
     to: _receiverAddress,
